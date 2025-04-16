@@ -99,9 +99,18 @@ export default function IngredientSelector() {
         {loading && <Typography>Loading...</Typography>}
         {error && <Typography color="error">{error}</Typography>}
         {!loading && !error && meals.length > 0 ? (
-          <Stack spacing={2}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              overflowX: 'auto',
+              gap: 2,
+              py: 1,
+              scrollbarWidth: 'thin',
+            }}
+          >
             {meals.map((meal, idx) => (
-              <Card key={idx} variant="outlined" sx={{ maxWidth: 400 }}>
+              <Card key={idx} variant="outlined" sx={{ minWidth: 240, maxWidth: 280, mx: 1, flex: '0 0 auto' }}>
                 <CardContent>
                   <Typography variant="h6">{meal.name}</Typography>
                   {meal.image && (
@@ -111,7 +120,7 @@ export default function IngredientSelector() {
                 </CardContent>
               </Card>
             ))}
-          </Stack>
+          </Box>
         ) : (!loading && !error && (
           <Typography variant="body2" color="text.secondary">
             {selected.length === 0 ? 'Select ingredients to see possible meals.' : 'No matching meals found.'}
