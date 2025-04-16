@@ -82,11 +82,24 @@ export default function IngredientSelector() {
         options={INGREDIENTS}
         value={selected}
         onChange={(_, val) => setSelected(val)}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-          ))
-        }
+        renderTags={(value, getTagProps) => {
+          // Deterministic color assignment for each ingredient
+          const chipColors = [
+            'primary', 'secondary', 'success', 'warning', 'error', 'info',
+          ];
+          // Simple hash function for string
+          const hash = str => str.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+          return value.map((option, index) => (
+            <Chip
+              variant="filled"
+              color={chipColors[hash(option) % chipColors.length]}
+              label={option}
+              {...getTagProps({ index })}
+              key={option}
+              sx={{ fontWeight: 500 }}
+            />
+          ));
+        }}
         renderInput={(params) => (
           <TextField {...params} variant="outlined" label="Select Ingredients" placeholder="Type to search..." />
         )}
