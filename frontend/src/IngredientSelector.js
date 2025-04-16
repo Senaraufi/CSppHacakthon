@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, Chip, TextField, Autocomplete, Stack, Card, CardContent, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  Chip,
+  TextField,
+  Autocomplete,
+  Stack,
+  Card,
+  CardContent,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
 
-// Example ingredient list (could be replaced with backend data)
 const INGREDIENTS = [
-  'Eggs', 'Milk', 'Chicken', 'Tomato', 'Cheese', 'Bread', 'Onion', 'Potato', 'Rice', 'Pasta', 'Apple', 'Banana', 'Carrot', 'Spinach', 'Beef', 'Fish', 'Beans', 'Corn', 'Peas', 'Butter',
+  'Eggs', 'Milk', 'Chicken', 'Tomato', 'Cheese', 'Bread', 'Onion', 'Potato', 'Rice', 'Pasta',
+  'Apple', 'Banana', 'Carrot', 'Spinach', 'Beef', 'Fish', 'Beans', 'Corn', 'Peas', 'Butter',
 ];
-
-// TheMealDB public API endpoint (ingredient filter)
-const getApiUrl = (ingredients) =>
-  `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredients.map(encodeURIComponent).join(',')}`;
 
 export default function IngredientSelector() {
   const [selected, setSelected] = useState([]);
@@ -21,36 +29,45 @@ export default function IngredientSelector() {
   const DIETARY_OPTIONS = [
     { value: 'vegetarian', label: 'Vegetarian' },
     { value: 'vegan', label: 'Vegan' },
-    { value: 'glutenfree', label: 'Gluten-Free' },
-    { value: 'dairyfree', label: 'Dairy-Free' },
-    { value: 'nutfree', label: 'Nut-Free' },
+    { value: 'gluten-free', label: 'Gluten-Free' },
+    { value: 'dairy-free', label: 'Dairy-Free' },
+    { value: 'nut-free', label: 'Nut-Free' },
   ];
 
   const findMeals = async () => {
     setLoading(true);
     setError(null);
     setMeals([]);
+
     try {
-      if (selected.length === 0) {
-        setMeals([]);
-        setLoading(false);
-        return;
-      }
-      const url = getApiUrl(selected);
-      const response = await fetch(url);
+      const response = await fetch('http://localhost:5000/api/generate-meals', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ingredients: selected,
+          diet: dietary,
+        }),
+      });
+
       if (!response.ok) throw new Error('Failed to fetch meals');
       const data = await response.json();
-      // TheMealDB returns { meals: [ { idMeal, strMeal, strMealThumb }, ... ] }
+
+      console.log('🍽️ API response:', data);
+
       if (data.meals) {
         setMeals(data.meals.map(meal => ({
-          name: meal.strMeal,
-          image: meal.strMealThumb,
-          id: meal.idMeal
+          name: meal.strMeal || meal.name,
+          image: meal.strMealThumb || meal.image,
+          id: meal.idMeal || meal.id,
         })));
       } else {
         setMeals([]);
       }
+
     } catch (err) {
+      console.error('❌ Error fetching meals:', err);
       setError('Could not fetch meals. Please try again.');
     } finally {
       setLoading(false);
@@ -74,38 +91,35 @@ export default function IngredientSelector() {
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
+
       <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
         What ingredients do you have?
       </Typography>
-      {/* Color palette for ingredient chips */}
       <Autocomplete
         multiple
         options={INGREDIENTS}
         value={selected}
         onChange={(_, val) => setSelected(val)}
-        renderTags={(value, getTagProps) => {
-          const chipColors = [
-            'primary', 'secondary', 'success', 'warning', 'error', 'info',
-          ];
-          return value.map((option, index) => (
-            <Chip
-              variant="filled"
-              color={chipColors[index % chipColors.length]}
-              label={option}
-              {...getTagProps({ index })}
-              key={option}
-              sx={{ fontWeight: 500 }}
-            />
-          ));
-        }}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+          ))
+        }
         renderInput={(params) => (
           <TextField {...params} variant="outlined" label="Select Ingredients" placeholder="Type to search..." />
         )}
         sx={{ mb: 2, maxWidth: 500 }}
       />
-      <Button variant="contained" color="primary" onClick={findMeals} disabled={selected.length === 0}>
-        Find Meals
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={findMeals}
+        disabled={selected.length === 0 || loading}
+      >
+        {loading ? 'Finding...' : 'Find Meals'}
       </Button>
+
       <Box sx={{ mt: 4 }}>
         {loading && <Typography>Loading...</Typography>}
         {error && <Typography color="error">{error}</Typography>}
@@ -116,9 +130,12 @@ export default function IngredientSelector() {
                 <CardContent>
                   <Typography variant="h6">{meal.name}</Typography>
                   {meal.image && (
-                    <img src={meal.image} alt={meal.name} style={{ width: '100%', maxWidth: 200, borderRadius: 8, marginBottom: 8 }} />
+                    <img
+                      src={meal.image}
+                      alt={meal.name}
+                      style={{ width: '100%', maxWidth: 200, borderRadius: 8, marginBottom: 8 }}
+                    />
                   )}
-                  {/* TheMealDB does not provide ingredient list in this endpoint */}
                 </CardContent>
               </Card>
             ))}
@@ -132,3 +149,5 @@ export default function IngredientSelector() {
     </Box>
   );
 }
+
+
