@@ -180,7 +180,7 @@ export default function IngredientSelector() {
         <Card sx={{ my: 4, maxWidth: 600 }}>
           <CardContent>
             <Typography variant="h5" gutterBottom>
-              🎉 Surprise Meal: {surpriseMeal.name}
+               Surprise Meal: {surpriseMeal.name}
             </Typography>
             <img
               src={surpriseMeal.image}
