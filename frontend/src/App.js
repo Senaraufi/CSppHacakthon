@@ -13,21 +13,26 @@ import {
   Card,
   CardContent,
   IconButton,
+  InputBase,
 } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, Search as SearchIcon, Restaurant as RestaurantIcon } from '@mui/icons-material';
 
 // Create a custom theme
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#ff5722', // A warm orange color for food theme
     },
     secondary: {
-      main: '#dc004e',
+      main: '#4caf50', // A fresh green color
     },
     background: {
-      default: '#f5f5f5',
+      default: '#fafafa',
+      paper: '#ffffff',
     },
+  },
+  typography: {
+    fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
   },
 });
 
@@ -47,9 +52,19 @@ function App() {
             >
               <MenuIcon />
             </IconButton>
+            <RestaurantIcon sx={{ mr: 2 }} />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              My Web App
+              FoodieHub
             </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.15)', borderRadius: 1, p: 0.5 }}>
+              <InputBase
+                placeholder="Search recipes..."
+                sx={{ ml: 1, flex: 1, color: 'inherit' }}
+              />
+              <IconButton color="inherit" size="small">
+                <SearchIcon />
+              </IconButton>
+            </Box>
           </Toolbar>
         </AppBar>
 
@@ -65,11 +80,13 @@ function App() {
                 }}
               >
                 <Typography variant="h5" gutterBottom>
-                  Welcome to Your Web App
+                  Discover Delicious Recipes
                 </Typography>
-                <Typography variant="body1">
-                  This is a modern React application with Material-UI components.
-                  The backend will be implemented with Flask later.
+                <Typography variant="body1" paragraph>
+                  Welcome to FoodieHub, your ultimate destination for exploring, sharing, and creating amazing recipes.
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Browse through our collection of recipes, share your culinary creations, and connect with other food enthusiasts.
                 </Typography>
               </Paper>
             </Grid>
@@ -77,10 +94,19 @@ function App() {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    Quick Stats
+                    Popular Categories
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    • Breakfast & Brunch
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    • Quick & Easy Meals
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    • Healthy Recipes
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    This card can display important information or statistics.
+                    • Desserts
                   </Typography>
                 </CardContent>
               </Card>
