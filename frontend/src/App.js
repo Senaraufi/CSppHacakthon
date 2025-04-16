@@ -21,18 +21,50 @@ import { Menu as MenuIcon, Search as SearchIcon, Restaurant as RestaurantIcon } 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#ff5722', // A warm orange color for food theme
+      main: '#a4ac4c', // Sage green
+      light: '#fffae4', // Light cream
+      dark: '#8a9140', // Darker sage
     },
     secondary: {
-      main: '#4caf50', // A fresh green color
+      main: '#fffae4', // Warm beige
+      light: '#d8d1b8',
+      dark: '#b0a588',
     },
     background: {
-      default: '#fafafa',
-      paper: '#ffffff',
+      default: '#FFFFE4', // Light cream background
+      paper: '#fff',
+    },
+    text: {
+      primary: '#2c2c2c',
+      secondary: '#4a4a4a',
     },
   },
   typography: {
     fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+    h5: {
+      fontWeight: 600,
+      color: '#a4ac4c',
+    },
+    h6: {
+      color: '#a4ac4c',
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#fff',
+          borderRadius: 12,
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#a4ac4c',
+        },
+      },
+    },
   },
 });
 
@@ -53,13 +85,13 @@ function App() {
               <MenuIcon />
             </IconButton>
             <RestaurantIcon sx={{ mr: 2 }} />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              FoodieHub
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
+              Every Last Bite
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.15)', borderRadius: 1, p: 0.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.15)', borderRadius: 2, p: 0.5, mr: 2 }}>
               <InputBase
-                placeholder="Search recipes..."
-                sx={{ ml: 1, flex: 1, color: 'inherit' }}
+                placeholder="Enter ingredients you have..."
+                sx={{ ml: 1, flex: 1, color: 'inherit', minWidth: '250px' }}
               />
               <IconButton color="inherit" size="small">
                 <SearchIcon />
@@ -80,13 +112,13 @@ function App() {
                 }}
               >
                 <Typography variant="h5" gutterBottom>
-                  Discover Delicious Recipes
+                  Save Food, Create Amazing Meals
                 </Typography>
                 <Typography variant="body1" paragraph>
-                  Welcome to FoodieHub, your ultimate destination for exploring, sharing, and creating amazing recipes.
+                  Welcome to Every Last Bite, where we help you reduce food waste by generating delicious recipes from ingredients you already have.
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Browse through our collection of recipes, share your culinary creations, and connect with other food enthusiasts.
+                  Simply enter the ingredients in your kitchen, and we'll suggest creative recipes to make sure nothing goes to waste.
                 </Typography>
               </Paper>
             </Grid>
@@ -94,19 +126,19 @@ function App() {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    Popular Categories
+                    What We Offer
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    • Breakfast & Brunch
+                    • Recipe Generation from Your Ingredients
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    • Quick & Easy Meals
+                    • Food Waste Reduction Tips
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    • Healthy Recipes
+                    • Ingredient Shelf Life Guide
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    • Desserts
+                    • Smart Shopping Lists
                   </Typography>
                 </CardContent>
               </Card>
