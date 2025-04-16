@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Box, Typography, Button, Chip, TextField, Autocomplete, Stack,
-  Card, CardContent, ToggleButton, ToggleButtonGroup
+  Box, Typography, ToggleButtonGroup, ToggleButton, Autocomplete, TextField, Chip, Stack,
 } from '@mui/material';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 const INGREDIENTS = [
   'Eggs', 'Milk', 'Chicken', 'Tomato', 'Cheese', 'Bread', 'Onion',
@@ -12,17 +9,49 @@ const INGREDIENTS = [
   'Beef', 'Fish', 'Beans', 'Corn', 'Peas', 'Butter',
 ];
 
-const getApiUrl = (ingredients) =>
-  `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredients.map(encodeURIComponent).join(',')}`;
+// Ingredient to dietary tags mapping
+const INGREDIENT_DIET_MAP = {
+  Eggs:         ['vegetarian'],
+  Milk:         ['vegetarian'],
+  Chicken:      [],
+  Tomato:       ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Cheese:       ['vegetarian'],
+  Bread:        ['vegetarian'],
+  Onion:        ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Potato:       ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Rice:         ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Pasta:        ['vegetarian'],
+  Apple:        ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Banana:       ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Carrot:       ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Spinach:      ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Beef:         [],
+  Fish:         ['glutenfree', 'dairyfree', 'nutfree'],
+  Beans:        ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Corn:         ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Peas:         ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
+  Butter:       ['vegetarian'],
+};
+
+const RANDOM_RECIPES = [
+  "https://www.bbcgoodfood.com/recipes/chicken-curry",
+  "https://www.allrecipes.com/recipe/24074/alysias-basic-meat-lasagna/",
+  "https://www.foodnetwork.com/recipes/food-network-kitchen/classic-deviled-eggs-recipe-1973516",
+  "https://www.seriouseats.com/recipes/2011/02/perfect-chocolate-chip-cookies-recipe.html",
+  "https://www.delish.com/cooking/recipe-ideas/a19665918/easy-chicken-parmesan-recipe/",
+  "https://www.bonappetit.com/recipe/the-ultimate-veggie-burger",
+  "https://www.tasteofhome.com/recipes/best-ever-potato-salad/",
+  "https://www.simplyrecipes.com/recipes/banana_bread/",
+  "https://www.jamieoliver.com/recipes/chicken-recipes/chicken-tikka-masala/",
+  "https://www.loveandlemons.com/vegan-brownies/"
+];
 
 export default function IngredientSelector() {
   const [selected, setSelected] = useState([]);
   const [meals, setMeals] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [dietary, setDietary] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const [dietary, setDietary] = useState([]);
   const [surpriseMeal, setSurpriseMeal] = useState(null);
   const [surpriseLoading, setSurpriseLoading] = useState(false);
 
@@ -34,19 +63,22 @@ export default function IngredientSelector() {
     { value: 'nutfree', label: 'Nut-Free' },
   ];
 
-  const toggleFavorite = (meal) => {
-    setFavorites((prev) =>
-      prev.find((fav) => fav.id === meal.id)
-        ? prev.filter((fav) => fav.id !== meal.id)
-        : [...prev, meal]
-    );
-  };
+  // Filter ingredients by dietary requirements
+  const filteredIngredients = dietary.length === 0
+    ? INGREDIENTS
+    : INGREDIENTS.filter(ingr =>
+        dietary.every(tag => (INGREDIENT_DIET_MAP[ingr] || []).includes(tag))
+      );
+
+  // Restore the meal search button and API logic
+  const getApiUrl = (ingredients) =>
+    `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredients.map(encodeURIComponent).join(',')}`;
 
   const findMeals = async () => {
     setLoading(true);
     setError(null);
     setMeals([]);
-    setSurpriseMeal(null); // Clear surprise
+    setSurpriseMeal(null);
     try {
       if (selected.length === 0) {
         setMeals([]);
@@ -57,15 +89,15 @@ export default function IngredientSelector() {
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch meals');
       const data = await response.json();
+      let foundMeals = [];
       if (data.meals) {
-        setMeals(data.meals.map(meal => ({
+        foundMeals = data.meals.map(meal => ({
           name: meal.strMeal,
           image: meal.strMealThumb,
           id: meal.idMeal
-        })));
-      } else {
-        setMeals([]);
+        }));
       }
+      setMeals(foundMeals);
     } catch (err) {
       setError('Could not fetch meals. Please try again.');
     } finally {
@@ -73,6 +105,7 @@ export default function IngredientSelector() {
     }
   };
 
+  // Surprise Me: Pick a random recipe from the MealDB API
   const handleSurprise = async () => {
     setSurpriseLoading(true);
     setMeals([]);
@@ -119,7 +152,7 @@ export default function IngredientSelector() {
       </Typography>
       <Autocomplete
         multiple
-        options={INGREDIENTS}
+        options={filteredIngredients}
         value={selected}
         onChange={(_, val) => setSelected(val)}
         renderTags={(value, getTagProps) => {
@@ -143,64 +176,13 @@ export default function IngredientSelector() {
       />
 
       <Stack direction="row" spacing={2}>
-        <Button variant="contained" color="primary" onClick={findMeals} disabled={selected.length === 0 || loading}>
+        <button onClick={findMeals} disabled={selected.length === 0 || loading} style={{padding: '8px 16px', fontWeight: 600, borderRadius: 6, background: '#8BA870', color: 'white', border: 'none', cursor: 'pointer'}}>
           {loading ? 'Finding...' : 'Find Meals'}
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={handleSurprise} disabled={surpriseLoading}>
-          {surpriseLoading ? 'Shuffling...' : '🎲 Surprise Me'}
-        </Button>
+        </button>
+        <button onClick={handleSurprise} style={{padding: '8px 16px', fontWeight: 600, borderRadius: 6, background: '#FFB347', color: 'white', border: 'none', cursor: 'pointer'}}>
+          Surprise Me
+        </button>
       </Stack>
-
-      {favorites.length > 0 && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>⭐ Your Favorite Meals</Typography>
-          <Stack direction="row" spacing={2} sx={{ overflowX: 'auto', pb: 2 }}>
-            {favorites.map((fav, i) => (
-              <Card key={i} variant="outlined" sx={{ minWidth: 240, maxWidth: 280 }}>
-                <CardContent>
-                  <Typography variant="h6">{fav.name}</Typography>
-                  <img src={fav.image} alt={fav.name} style={{ width: '100%', maxWidth: 200, borderRadius: 8 }} />
-                  <Button
-                    variant="outlined"
-                    onClick={() => toggleFavorite(fav)}
-                    sx={{ mt: 1 }}
-                    color="secondary"
-                  >
-                    ★ Remove Favorite
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </Stack>
-        </Box>
-      )}
-
-      {/* Surprise Result */}
-      {surpriseMeal && (
-        <Card sx={{ my: 4, maxWidth: 600 }}>
-          <CardContent>
-            <Typography variant="h5" gutterBottom>
-               Surprise Meal: {surpriseMeal.name}
-            </Typography>
-            <img
-              src={surpriseMeal.image}
-              alt={surpriseMeal.name}
-              style={{ width: '100%', borderRadius: 8, marginBottom: 8 }}
-            />
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
-              {surpriseMeal.instructions.slice(0, 400)}...
-            </Typography>
-            <Button
-              variant="outlined"
-              href={surpriseMeal.link}
-              target="_blank"
-              sx={{ mt: 2 }}
-            >
-              View Full Recipe
-            </Button>
-          </CardContent>
-        </Card>
-      )}
 
       <Box sx={{ mt: 4 }}>
         {loading && <Typography>Loading...</Typography>}
@@ -208,34 +190,13 @@ export default function IngredientSelector() {
         {!loading && !error && meals.length > 0 ? (
           <Box sx={{ display: 'flex', flexDirection: 'row', overflowX: 'auto', gap: 2, py: 1 }}>
             {meals.map((meal, idx) => (
-              <Card key={idx} variant="outlined" sx={{ minWidth: 240, maxWidth: 280, flex: '0 0 auto' }}>
-                <CardContent>
-                  <Typography variant="h6">{meal.name}</Typography>
-                  {meal.image && (
-                    <img src={meal.image} alt={meal.name} style={{ width: '100%', maxWidth: 200, borderRadius: 8, marginBottom: 8 }} />
-                  )}
-                  <Stack direction="row" spacing={1}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      href={`https://www.themealdb.com/meal/${meal.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Get Recipe
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="warning"
-                      onClick={() => toggleFavorite(meal)}
-                    >
-                      {favorites.find(fav => fav.id === meal.id)
-                        ? <StarIcon sx={{ fontSize: 20 }} />
-                        : <StarBorderIcon sx={{ fontSize: 20 }} />}
-                    </Button>
-                  </Stack>
-                </CardContent>
-              </Card>
+              <Box key={idx} sx={{ minWidth: 240, maxWidth: 280, flex: '0 0 auto', border: '1px solid #eee', borderRadius: 2, p: 2, bgcolor: '#fff', m: 1 }}>
+                <Typography variant="h6">{meal.name}</Typography>
+                {meal.image && (
+                  <img src={meal.image} alt={meal.name} style={{ width: '100%', maxWidth: 200, borderRadius: 8, marginBottom: 8 }} />
+                )}
+                <button style={{marginTop: 8, padding: '6px 12px', borderRadius: 4, background: '#FFB347', color: '#fff', border: 'none', fontWeight: 600, cursor: 'pointer'}} onClick={() => window.open(`https://www.themealdb.com/meal/${meal.id}`, '_blank')}>Get Recipe</button>
+              </Box>
             ))}
           </Box>
         ) : (!loading && !error && selected.length > 0 && (
@@ -244,6 +205,22 @@ export default function IngredientSelector() {
           </Typography>
         ))}
       </Box>
+
+      {surpriseMeal && (
+        <Box sx={{ my: 4, maxWidth: 600, border: '1px solid #eee', borderRadius: 2, p: 2, bgcolor: '#fff' }}>
+          <Typography variant="h5" gutterBottom>
+            Surprise Meal
+          </Typography>
+          <Typography variant="h6">{surpriseMeal.name}</Typography>
+          {surpriseMeal.image && (
+            <img src={surpriseMeal.image} alt={surpriseMeal.name} style={{ width: '100%', maxWidth: 200, borderRadius: 8, marginBottom: 8 }} />
+          )}
+          <Typography variant="body1" sx={{ mb: 2 }}>{surpriseMeal.instructions}</Typography>
+          <a href={surpriseMeal.link} target="_blank" rel="noopener noreferrer" style={{fontWeight: 600, color: '#8BA870', fontSize: 18}}>
+            Click here to view your surprise meal!
+          </a>
+        </Box>
+      )}
     </Box>
   );
 }

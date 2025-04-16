@@ -11,7 +11,7 @@ meal_client = MealDBClient()
 def api_generate_meals():
     data = request.get_json()
     ingredients = data.get('ingredients', [])
-    dietary_tags = data.get('diet', [])
+    dietary_tags = data.get('dietary_tags', [])
 
     print("✅ Received:", data)
 
