@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   AppBar,
   Box,
@@ -104,6 +104,15 @@ const featuredRecipes = [
 ];
 
 function App() {
+  // Section refs for scrolling
+  const aboutRef = useRef(null);
+  const recipesRef = useRef(null);
+  // Scroll handler
+  const scrollTo = (ref) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -127,20 +136,50 @@ function App() {
         </AppBar>
 
         {/* Hero Section */}
-        <Container maxWidth="lg" sx={{ mt: 8, mb: 8 }}>
-          <Grid container spacing={4} alignItems="center">
+        <Container
+          maxWidth="xl"
+          sx={{
+            mt: 0,
+            mb: 10,
+            py: { xs: 8, md: 14 },
+            minHeight: { xs: 400, md: 600 },
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Grid container spacing={8} alignItems="center">
             <Grid item xs={12} md={6}>
-              <Typography variant="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+              <Typography
+                variant="h1"
+                gutterBottom
+                sx={{ fontWeight: 'bold', color: 'primary.main', fontSize: { xs: '2.5rem', md: '4rem' }, mb: 3 }}
+              >
                 Simple and Tasty Recipe Ideas
               </Typography>
-              <Typography variant="body1" paragraph sx={{ mb: 4, color: 'text.secondary' }}>
+              <Typography
+                variant="h5"
+                paragraph
+                sx={{ mb: 5, color: 'text.secondary', fontSize: { xs: '1.1rem', md: '1.5rem' } }}
+              >
                 Let's help you create delicious meals with ingredients you already have, reducing food waste one recipe at a time.
               </Typography>
-              <Stack direction="row" spacing={2}>
-                <Button variant="contained" color="primary" size="large">
+              <Stack direction="row" spacing={3}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  sx={{ px: 5, py: 1.5, fontSize: '1.25rem', borderRadius: 3 }}
+                  onClick={() => scrollTo(recipesRef)}
+                >
                   Explore
                 </Button>
-                <Button variant="outlined" color="primary" size="large">
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  sx={{ px: 5, py: 1.5, fontSize: '1.25rem', borderRadius: 3 }}
+                  onClick={() => scrollTo(aboutRef)}
+                >
                   Learn More
                 </Button>
               </Stack>
@@ -151,7 +190,19 @@ function App() {
           </Grid>
         </Container>
 
+        {/* About Section */}
+        <span ref={aboutRef} />
+        <Box sx={{ py: 6, px: 2, bgcolor: 'background.paper', mb: 8 }}>
+          <Container maxWidth="md">
+            <Typography variant="h4" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>About Every Last Bite</Typography>
+            <Typography variant="body1" color="text.secondary">
+              Our mission is to help you make the most of the ingredients you already have, reducing food waste and inspiring creativity in the kitchen. Select your ingredients, get meal ideas, and enjoy delicious recipes tailored to you.
+            </Typography>
+          </Container>
+        </Box>
+
         {/* Ingredient Selector */}
+        <span ref={recipesRef} />
         <IngredientSelector />
 
         {/* Recipe Cards - always show featured recipes */}
