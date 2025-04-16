@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 from meal_api import MealDBClient
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 meal_client = MealDBClient()
 
 @app.route('/', methods=['GET', 'POST'])

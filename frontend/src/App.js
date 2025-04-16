@@ -23,27 +23,27 @@ import IngredientSelector from './IngredientSelector';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#8BA870', // Olive green
-      light: '#B6CFAE', // Lighter olive
-      dark: '#5C7A29', // Deeper olive
+      main: '#8BA870',
+      light: '#B6CFAE',
+      dark: '#5C7A29',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#FFB347', // Warm orange
+      main: '#FFB347',
       light: '#FFD699',
       dark: '#FF8C00',
       contrastText: '#fff',
     },
     background: {
-      default: '#FFF8E1', // Light cream background
+      default: '#FFF8E1',
       paper: '#FFFFFF',
     },
     accent: {
-      main: '#6D4C41', // Deep brown
+      main: '#6D4C41',
     },
     text: {
-      primary: '#222', // Nearly black
-      secondary: '#5D4037', // Dark brown
+      primary: '#222',
+      secondary: '#5D4037',
     },
   },
   typography: {
@@ -86,6 +86,22 @@ const theme = createTheme({
     },
   },
 });
+
+// Hardcoded featured recipes (robust, no API errors)
+const featuredRecipes = [
+  {
+    name: 'Apple Frangipan Tart',
+    image: 'https://www.themealdb.com/images/media/meals/wxywrq1468235067.jpg',
+  },
+  {
+    name: 'Chicken Handi',
+    image: 'https://www.themealdb.com/images/media/meals/wyxwsp1486979827.jpg',
+  },
+  {
+    name: 'Beef Wellington',
+    image: 'https://www.themealdb.com/images/media/meals/vvpprx1487325699.jpg',
+  },
+];
 
 function App() {
   return (
@@ -138,25 +154,21 @@ function App() {
         {/* Ingredient Selector */}
         <IngredientSelector />
 
-        {/* Recipe Cards */}
+        {/* Recipe Cards - always show featured recipes */}
         <Container maxWidth="lg" sx={{ mb: 8 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: 4 }}>
-            {[
-              { title: 'Fresh Fruit Smoothies', image: '/images/smoothie.jpg' },
-              { title: 'Healthy Banana Treats', image: '/images/banana.jpg' },
-              { title: 'Citrus Refreshments', image: '/images/citrus.jpg' }
-            ].map((item, index) => (
+            {featuredRecipes.map((item, index) => (
               <Card key={index} sx={{ width: 220, minWidth: 180, mx: 1, borderRadius: 3, boxShadow: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <CardMedia
                   component="img"
                   height="120"
                   image={item.image}
-                  alt={item.title}
+                  alt={item.name}
                   sx={{ objectFit: 'cover', width: '100%', borderRadius: 2 }}
                 />
                 <CardContent sx={{ p: 2 }}>
                   <Typography gutterBottom variant="subtitle1" component="div" sx={{ fontWeight: 600, textAlign: 'center' }}>
-                    {item.title}
+                    {item.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
                     Visit this incredible recipe with different and tasty juice
@@ -167,7 +179,6 @@ function App() {
           </Box>
         </Container>
 
-        
         {/* Contact Section */}
         <Container maxWidth="sm" sx={{ textAlign: 'center', mb: 8 }}>
           <Typography variant="h3" gutterBottom sx={{ color: 'primary.main' }}>
