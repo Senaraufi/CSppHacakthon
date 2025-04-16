@@ -105,8 +105,10 @@ const featuredRecipes = [
 
 function App() {
   // Section refs for scrolling
+  const homeRef = useRef(null);
   const aboutRef = useRef(null);
   const recipesRef = useRef(null);
+  const contactRef = useRef(null);
   // Scroll handler
   const scrollTo = (ref) => {
     if (ref.current) {
@@ -127,15 +129,16 @@ function App() {
               </Typography>
             </Box>
             <Stack direction="row" spacing={2}>
-              <Button sx={{ color: '#111', fontWeight: 500 }}>Home</Button>
-              <Button sx={{ color: '#111', fontWeight: 500 }}>About</Button>
-              <Button sx={{ color: '#111', fontWeight: 500 }}>Recipes</Button>
-              <Button sx={{ color: '#111', fontWeight: 500 }}>Contact</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(homeRef)}>Home</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(aboutRef)}>About</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(recipesRef)}>Recipes</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(contactRef)}>Contact</Button>
             </Stack>
           </Toolbar>
         </AppBar>
 
         {/* Hero Section */}
+        <span ref={homeRef} />
         <Container
           maxWidth="xl"
           sx={{
@@ -231,6 +234,7 @@ function App() {
         </Container>
 
         {/* Contact Section */}
+        <span ref={contactRef} />
         <Container maxWidth="sm" sx={{ textAlign: 'center', mb: 8 }}>
           <Typography variant="h3" gutterBottom sx={{ color: 'primary.main' }}>
             Contact us for more Info
