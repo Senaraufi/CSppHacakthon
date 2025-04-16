@@ -16,7 +16,7 @@ import {
   IconButton,
   Stack,
 } from '@mui/material';
-import { PlayArrow as PlayArrowIcon } from '@mui/icons-material';
+import { PlayArrow as PlayArrowIcon, Fastfood as FastfoodIcon } from '@mui/icons-material';
 
 // Create a custom theme
 const theme = createTheme({
@@ -77,14 +77,17 @@ function App() {
         {/* Navigation */}
         <AppBar position="static" color="transparent" elevation={0}>
           <Toolbar>
-            <Typography variant="h6" sx={{ flexGrow: 1, color: 'primary.main', fontWeight: 'bold' }}>
-              Every Last Bite
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+              <FastfoodIcon sx={{ color: '#111', fontSize: 32, mr: 1 }} />
+              <Typography variant="h6" sx={{ color: '#111', fontWeight: 'bold', letterSpacing: 1 }}>
+                Every Last Bite
+              </Typography>
+            </Box>
             <Stack direction="row" spacing={2}>
-              <Button color="primary">Home</Button>
-              <Button color="primary">About</Button>
-              <Button color="primary">Recipes</Button>
-              <Button color="primary">Contact</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }}>Home</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }}>About</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }}>Recipes</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }}>Contact</Button>
             </Stack>
           </Toolbar>
         </AppBar>
@@ -116,59 +119,34 @@ function App() {
 
         {/* Recipe Cards */}
         <Container maxWidth="lg" sx={{ mb: 8 }}>
-          <Grid container spacing={4}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: 4 }}>
             {[
               { title: 'Fresh Fruit Smoothies', image: '/images/smoothie.jpg' },
               { title: 'Healthy Banana Treats', image: '/images/banana.jpg' },
               { title: 'Citrus Refreshments', image: '/images/citrus.jpg' }
             ].map((item, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 4 }}>
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={item.image}
-                    alt={item.title}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h6">
-                      {item.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Visit this incredible recipe with different and tasty juice
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
+              <Card key={index} sx={{ width: 220, minWidth: 180, mx: 1, borderRadius: 3, boxShadow: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <CardMedia
+                  component="img"
+                  height="120"
+                  image={item.image}
+                  alt={item.title}
+                  sx={{ objectFit: 'cover', width: '100%', borderRadius: 2 }}
+                />
+                <CardContent sx={{ p: 2 }}>
+                  <Typography gutterBottom variant="subtitle1" component="div" sx={{ fontWeight: 600, textAlign: 'center' }}>
+                    {item.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                    Visit this incredible recipe with different and tasty juice
+                  </Typography>
+                </CardContent>
+              </Card>
             ))}
-          </Grid>
+          </Box>
         </Container>
 
-        {/* Video Section */}
-        <Box sx={{ position: 'relative', mb: 8 }}>
-          <Box
-            component="img"
-            src="/images/video-thumbnail.jpg"
-            sx={{
-              width: '100%',
-              height: 400,
-              objectFit: 'cover',
-            }}
-          />
-          <IconButton
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: 'primary.main',
-              '&:hover': { backgroundColor: 'primary.dark' },
-            }}
-          >
-            <PlayArrowIcon sx={{ color: 'white', fontSize: 40 }} />
-          </IconButton>
-        </Box>
-
+        
         {/* Contact Section */}
         <Container maxWidth="sm" sx={{ textAlign: 'center', mb: 8 }}>
           <Typography variant="h3" gutterBottom sx={{ color: 'primary.main' }}>
