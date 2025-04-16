@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -104,6 +104,39 @@ const featuredRecipes = [
   },
 ];
 
+// FoodSavedToday component
+function FoodSavedToday() {
+  const BASE = 128;
+  const [saved, setSaved] = useState(BASE);
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const key = `foodSaved_${today}`;
+    let val = localStorage.getItem(key);
+    if (!val) {
+      val = BASE;
+    } else {
+      val = parseInt(val, 10) + 1;
+    }
+    setSaved(val);
+    localStorage.setItem(key, val);
+  }, []);
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+      <Card sx={{ minWidth: 280, bgcolor: '#f7fff2', boxShadow: 4, borderRadius: 3, p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography variant="h2" sx={{ color: 'success.main', fontWeight: 700, mb: 1 }}>
+          {saved} kg
+        </Typography>
+        <Typography variant="h6" sx={{ color: 'text.secondary', mb: 1 }}>
+          of food saved today!
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Thanks to our community, we're making a real impact on food waste every single day.
+        </Typography>
+      </Card>
+    </Box>
+  );
+}
+
 function App() {
   // Section refs for scrolling
   const homeRef = useRef(null);
@@ -199,11 +232,14 @@ function App() {
         <Box sx={{ py: 6, px: 2, bgcolor: 'background.paper', mb: 8 }}>
           <Container maxWidth="md">
             <Typography variant="h4" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>About Every Last Bite</Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
               Our mission is to help you make the most of the ingredients you already have, reducing food waste and inspiring creativity in the kitchen. Select your ingredients, get meal ideas, and enjoy delicious recipes tailored to you.
             </Typography>
+            {/* Food Saved Today Component */}
+            <FoodSavedToday />
           </Container>
         </Box>
+
 
         {/* Ingredient Selector */}
         <span ref={recipesRef} />
