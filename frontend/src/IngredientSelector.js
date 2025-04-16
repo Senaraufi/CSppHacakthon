@@ -77,16 +77,27 @@ export default function IngredientSelector() {
       <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
         What ingredients do you have?
       </Typography>
+      {/* Color palette for ingredient chips */}
       <Autocomplete
         multiple
         options={INGREDIENTS}
         value={selected}
         onChange={(_, val) => setSelected(val)}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-          ))
-        }
+        renderTags={(value, getTagProps) => {
+          const chipColors = [
+            'primary', 'secondary', 'success', 'warning', 'error', 'info',
+          ];
+          return value.map((option, index) => (
+            <Chip
+              variant="filled"
+              color={chipColors[index % chipColors.length]}
+              label={option}
+              {...getTagProps({ index })}
+              key={option}
+              sx={{ fontWeight: 500 }}
+            />
+          ));
+        }}
         renderInput={(params) => (
           <TextField {...params} variant="outlined" label="Select Ingredients" placeholder="Type to search..." />
         )}
