@@ -129,7 +129,16 @@ export default function IngredientSelector() {
                   {meal.image && (
                     <img src={meal.image} alt={meal.name} style={{ width: '100%', maxWidth: 200, borderRadius: 8, marginBottom: 8 }} />
                   )}
-                  {/* TheMealDB does not provide ingredient list in this endpoint */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href={`https://www.themealdb.com/meal/${meal.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ mt: 1 }}
+                  >
+                    Get Recipe
+                  </Button>
                 </CardContent>
               </Card>
             ))}
