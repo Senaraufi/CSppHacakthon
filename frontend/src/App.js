@@ -23,32 +23,41 @@ import IngredientSelector from './IngredientSelector';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#a4ac4c', // Sage green
-      light: '#fffae4', // Light cream
-      dark: '#8a9140', // Darker sage
+      main: '#8BA870', // Olive green
+      light: '#B6CFAE', // Lighter olive
+      dark: '#5C7A29', // Deeper olive
+      contrastText: '#fff',
     },
     secondary: {
-      main: '#fffae4', // Warm beige
-      light: '#d8d1b8',
-      dark: '#b0a588',
+      main: '#FFB347', // Warm orange
+      light: '#FFD699',
+      dark: '#FF8C00',
+      contrastText: '#fff',
     },
     background: {
-      default: '#FFFFE4', // Light cream background
-      paper: '#fff',
+      default: '#FFF8E1', // Light cream background
+      paper: '#FFFFFF',
+    },
+    accent: {
+      main: '#6D4C41', // Deep brown
     },
     text: {
-      primary: '#2c2c2c',
-      secondary: '#4a4a4a',
+      primary: '#222', // Nearly black
+      secondary: '#5D4037', // Dark brown
     },
   },
   typography: {
-    fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Poppins", "Quicksand", "Roboto", "Helvetica", "Arial", sans-serif',
     h5: {
-      fontWeight: 600,
-      color: '#a4ac4c',
+      fontWeight: 700,
+      color: '#8BA870',
     },
     h6: {
-      color: '#a4ac4c',
+      color: '#FFB347',
+    },
+    button: {
+      fontWeight: 600,
+      textTransform: 'none',
     },
   },
   components: {
@@ -56,14 +65,22 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: '#fff',
-          borderRadius: 12,
+          borderRadius: 14,
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#a4ac4c',
+          backgroundColor: '#8BA870',
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          fontWeight: 600,
         },
       },
     },

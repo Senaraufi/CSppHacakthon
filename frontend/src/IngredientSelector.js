@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, Chip, TextField, Autocomplete, Stack, Card, CardContent } from '@mui/material';
+import { Box, Typography, Button, Chip, TextField, Autocomplete, Stack, Card, CardContent, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 // Example ingredient list (could be replaced with backend data)
 const INGREDIENTS = [
@@ -13,9 +13,18 @@ const getApiUrl = (ingredients) =>
 export default function IngredientSelector() {
   const [selected, setSelected] = useState([]);
   const [meals, setMeals] = useState([]);
+  const [dietary, setDietary] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const DIETARY_OPTIONS = [
+    { value: 'vegetarian', label: 'Vegetarian' },
+    { value: 'vegan', label: 'Vegan' },
+    { value: 'glutenfree', label: 'Gluten-Free' },
+    { value: 'dairyfree', label: 'Dairy-Free' },
+    { value: 'nutfree', label: 'Nut-Free' },
+  ];
 
   const findMeals = async () => {
     setLoading(true);
@@ -50,6 +59,21 @@ export default function IngredientSelector() {
 
   return (
     <Box sx={{ my: 6, p: 4, bgcolor: 'background.paper', borderRadius: 3, boxShadow: 2 }}>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+        Any dietary requirements?
+      </Typography>
+      <ToggleButtonGroup
+        value={dietary}
+        onChange={(_, newDiet) => setDietary(newDiet)}
+        aria-label="dietary requirements"
+        sx={{ mb: 3, flexWrap: 'wrap' }}
+      >
+        {DIETARY_OPTIONS.map(opt => (
+          <ToggleButton key={opt.value} value={opt.value} aria-label={opt.label} sx={{ mr: 1, mb: 1 }}>
+            {opt.label}
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
       <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
         What ingredients do you have?
       </Typography>
