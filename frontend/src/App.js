@@ -15,6 +15,7 @@ import {
   CardMedia,
   IconButton,
   Stack,
+  TextField,
 } from '@mui/material';
 import { PlayArrow as PlayArrowIcon, Fastfood as FastfoodIcon } from '@mui/icons-material';
 import IngredientSelector from './IngredientSelector';
@@ -132,7 +133,7 @@ function App() {
               <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(homeRef)}>Home</Button>
               <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(aboutRef)}>About</Button>
               <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(recipesRef)}>Recipes</Button>
-              <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(contactRef)}>Contact</Button>
+              <Button sx={{ color: '#111', fontWeight: 500 }} onClick={() => scrollTo(contactRef)}>Leave a Suggestion</Button>
             </Stack>
           </Toolbar>
         </AppBar>
@@ -233,18 +234,28 @@ function App() {
           </Box>
         </Container>
 
-        {/* Contact Section */}
+        {/* Suggestion Form Section */}
         <span ref={contactRef} />
-        <Container maxWidth="sm" sx={{ textAlign: 'center', mb: 8 }}>
+        <Container maxWidth="sm" sx={{ textAlign: 'center', mb: 8, bgcolor: '#fff', py: 5, borderRadius: 3, boxShadow: 2 }}>
           <Typography variant="h3" gutterBottom sx={{ color: 'primary.main' }}>
-            Contact us for more Info
+            Leave a Recipe Suggestion
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph>
-            Have questions about reducing food waste or need recipe suggestions? We're here to help!
+            Have a great recipe idea or suggestion? Let us know below!
           </Typography>
-          <Button variant="contained" color="primary" size="large">
-            Contact
-          </Button>
+          <Box component="form" sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 2 }} onSubmit={e => {
+            e.preventDefault();
+            // Simple demo: just show an alert
+            alert('Thank you for your suggestion!');
+            e.target.reset();
+          }}>
+            <TextField name="name" label="Your Name" variant="outlined" fullWidth required />
+            <TextField name="email" label="Email (optional)" variant="outlined" fullWidth type="email" />
+            <TextField name="suggestion" label="Your Recipe Suggestion" variant="outlined" fullWidth required multiline rows={4} />
+            <Button type="submit" variant="contained" color="primary" size="large">
+              Submit Suggestion
+            </Button>
+          </Box>
         </Container>
 
         {/* Footer */}
