@@ -17,6 +17,7 @@ import {
   Stack,
 } from '@mui/material';
 import { PlayArrow as PlayArrowIcon, Fastfood as FastfoodIcon } from '@mui/icons-material';
+import IngredientSelector from './IngredientSelector';
 
 // Create a custom theme
 const theme = createTheme({
@@ -116,6 +117,9 @@ function App() {
             </Grid>
           </Grid>
         </Container>
+
+        {/* Ingredient Selector */}
+        <IngredientSelector />
 
         {/* Recipe Cards */}
         <Container maxWidth="lg" sx={{ mb: 8 }}>
