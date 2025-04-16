@@ -23,6 +23,9 @@ export default function IngredientSelector() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const [surpriseMeal, setSurpriseMeal] = useState(null);
+  const [surpriseLoading, setSurpriseLoading] = useState(false);
+
   const DIETARY_OPTIONS = [
     { value: 'vegetarian', label: 'Vegetarian' },
     { value: 'vegan', label: 'Vegan' },
@@ -43,6 +46,7 @@ export default function IngredientSelector() {
     setLoading(true);
     setError(null);
     setMeals([]);
+    setSurpriseMeal(null); // Clear surprise
     try {
       if (selected.length === 0) {
         setMeals([]);
@@ -66,6 +70,29 @@ export default function IngredientSelector() {
       setError('Could not fetch meals. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSurprise = async () => {
+    setSurpriseLoading(true);
+    setMeals([]);
+    setError(null);
+    try {
+      await new Promise(res => setTimeout(res, 800)); // Add suspense
+      const res = await fetch('https://www.themealdb.com/api/json/v1/1/random.php');
+      const data = await res.json();
+      const meal = data.meals[0];
+      setSurpriseMeal({
+        id: meal.idMeal,
+        name: meal.strMeal,
+        image: meal.strMealThumb,
+        instructions: meal.strInstructions,
+        link: meal.strSource || `https://www.themealdb.com/meal/${meal.idMeal}`
+      });
+    } catch (err) {
+      setError('Failed to fetch a surprise meal.');
+    } finally {
+      setSurpriseLoading(false);
     }
   };
 
@@ -115,11 +142,15 @@ export default function IngredientSelector() {
         sx={{ mb: 2, maxWidth: 500 }}
       />
 
-      <Button variant="contained" color="primary" onClick={findMeals} disabled={selected.length === 0}>
-        Find Meals
-      </Button>
+      <Stack direction="row" spacing={2}>
+        <Button variant="contained" color="primary" onClick={findMeals} disabled={selected.length === 0 || loading}>
+          {loading ? 'Finding...' : 'Find Meals'}
+        </Button>
+        <Button variant="outlined" color="secondary" onClick={handleSurprise} disabled={surpriseLoading}>
+          {surpriseLoading ? 'Shuffling...' : '🎲 Surprise Me'}
+        </Button>
+      </Stack>
 
-      {/* Display Favorites */}
       {favorites.length > 0 && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>⭐ Your Favorite Meals</Typography>
@@ -144,7 +175,33 @@ export default function IngredientSelector() {
         </Box>
       )}
 
-      {/* Display Found Meals */}
+      {/* Surprise Result */}
+      {surpriseMeal && (
+        <Card sx={{ my: 4, maxWidth: 600 }}>
+          <CardContent>
+            <Typography variant="h5" gutterBottom>
+              🎉 Surprise Meal: {surpriseMeal.name}
+            </Typography>
+            <img
+              src={surpriseMeal.image}
+              alt={surpriseMeal.name}
+              style={{ width: '100%', borderRadius: 8, marginBottom: 8 }}
+            />
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
+              {surpriseMeal.instructions.slice(0, 400)}...
+            </Typography>
+            <Button
+              variant="outlined"
+              href={surpriseMeal.link}
+              target="_blank"
+              sx={{ mt: 2 }}
+            >
+              View Full Recipe
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <Box sx={{ mt: 4 }}>
         {loading && <Typography>Loading...</Typography>}
         {error && <Typography color="error">{error}</Typography>}
@@ -181,9 +238,9 @@ export default function IngredientSelector() {
               </Card>
             ))}
           </Box>
-        ) : (!loading && !error && (
+        ) : (!loading && !error && selected.length > 0 && (
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-            {selected.length === 0 ? 'Select ingredients to see possible meals.' : 'No matching meals found.'}
+            No matching meals found.
           </Typography>
         ))}
       </Box>
