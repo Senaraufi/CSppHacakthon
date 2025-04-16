@@ -6,24 +6,46 @@ const INGREDIENTS = [
   'Eggs', 'Milk', 'Chicken', 'Tomato', 'Cheese', 'Bread', 'Onion', 'Potato', 'Rice', 'Pasta', 'Apple', 'Banana', 'Carrot', 'Spinach', 'Beef', 'Fish', 'Beans', 'Corn', 'Peas', 'Butter',
 ];
 
-// Mock meal suggestions
-const MOCK_MEALS = [
-  { name: 'Omelette', ingredients: ['Eggs', 'Cheese', 'Onion'] },
-  { name: 'Chicken Sandwich', ingredients: ['Chicken', 'Bread', 'Tomato'] },
-  { name: 'Veggie Stir Fry', ingredients: ['Carrot', 'Onion', 'Peas', 'Rice'] },
-  { name: 'Banana Pancakes', ingredients: ['Banana', 'Eggs', 'Milk'] },
-];
+// TheMealDB public API endpoint (ingredient filter)
+const getApiUrl = (ingredients) =>
+  `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredients.map(encodeURIComponent).join(',')}`;
 
 export default function IngredientSelector() {
   const [selected, setSelected] = useState([]);
   const [meals, setMeals] = useState([]);
 
-  const findMeals = () => {
-    // For now, filter mock meals that can be made with selected ingredients
-    const possibleMeals = MOCK_MEALS.filter(meal =>
-      meal.ingredients.every(ing => selected.includes(ing))
-    );
-    setMeals(possibleMeals);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const findMeals = async () => {
+    setLoading(true);
+    setError(null);
+    setMeals([]);
+    try {
+      if (selected.length === 0) {
+        setMeals([]);
+        setLoading(false);
+        return;
+      }
+      const url = getApiUrl(selected);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch meals');
+      const data = await response.json();
+      // TheMealDB returns { meals: [ { idMeal, strMeal, strMealThumb }, ... ] }
+      if (data.meals) {
+        setMeals(data.meals.map(meal => ({
+          name: meal.strMeal,
+          image: meal.strMealThumb,
+          id: meal.idMeal
+        })));
+      } else {
+        setMeals([]);
+      }
+    } catch (err) {
+      setError('Could not fetch meals. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,24 +72,27 @@ export default function IngredientSelector() {
         Find Meals
       </Button>
       <Box sx={{ mt: 4 }}>
-        {meals.length > 0 ? (
+        {loading && <Typography>Loading...</Typography>}
+        {error && <Typography color="error">{error}</Typography>}
+        {!loading && !error && meals.length > 0 ? (
           <Stack spacing={2}>
             {meals.map((meal, idx) => (
               <Card key={idx} variant="outlined" sx={{ maxWidth: 400 }}>
                 <CardContent>
                   <Typography variant="h6">{meal.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Ingredients: {meal.ingredients.join(', ')}
-                  </Typography>
+                  {meal.image && (
+                    <img src={meal.image} alt={meal.name} style={{ width: '100%', maxWidth: 200, borderRadius: 8, marginBottom: 8 }} />
+                  )}
+                  {/* TheMealDB does not provide ingredient list in this endpoint */}
                 </CardContent>
               </Card>
             ))}
           </Stack>
-        ) : (
+        ) : (!loading && !error && (
           <Typography variant="body2" color="text.secondary">
             {selected.length === 0 ? 'Select ingredients to see possible meals.' : 'No matching meals found.'}
           </Typography>
-        )}
+        ))}
       </Box>
     </Box>
   );
