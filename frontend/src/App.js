@@ -87,7 +87,7 @@ const theme = createTheme({
   },
 });
 
-// Hardcoded featured recipes (robust, no API errors)
+// Hardcoded featured recipes
 const featuredRecipes = [
   {
     name: 'Apple Frangipan Tart',
