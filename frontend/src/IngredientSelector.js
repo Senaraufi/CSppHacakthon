@@ -11,26 +11,26 @@ const INGREDIENTS = [
 
 // Ingredient to dietary tags mapping
 const INGREDIENT_DIET_MAP = {
-  Eggs:         ['vegetarian'],
-  Milk:         ['vegetarian'],
-  Chicken:      [],
+  Eggs:         ['vegetarian', 'dairyfree', 'glutenfree', 'nutfree'],
+  Milk:         ['vegetarian', 'glutenfree', 'nutfree'], // Not dairy-free
+  Chicken:      ['dairyfree', 'glutenfree', 'nutfree'],
   Tomato:       ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
-  Cheese:       ['vegetarian'],
-  Bread:        ['vegetarian'],
+  Cheese:       ['vegetarian', 'glutenfree', 'nutfree'], // Not dairy-free
+  Bread:        ['vegetarian'], // Usually not gluten-free, may contain nuts
   Onion:        ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
   Potato:       ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
   Rice:         ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
-  Pasta:        ['vegetarian'],
+  Pasta:        ['vegetarian'], // Usually not gluten-free, may contain eggs or nuts
   Apple:        ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
   Banana:       ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
   Carrot:       ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
   Spinach:      ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
-  Beef:         [],
+  Beef:         ['dairyfree', 'glutenfree', 'nutfree'],
   Fish:         ['glutenfree', 'dairyfree', 'nutfree'],
   Beans:        ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
   Corn:         ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
   Peas:         ['vegetarian', 'vegan', 'glutenfree', 'dairyfree', 'nutfree'],
-  Butter:       ['vegetarian'],
+  Butter:       ['vegetarian', 'glutenfree', 'nutfree'], // Not dairy-free
 };
 
 const RANDOM_RECIPES = [
