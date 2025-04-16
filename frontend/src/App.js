@@ -226,7 +226,7 @@ function App() {
                     {item.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-                    Visit this incredible recipe with different and tasty ingredients
+                    Visit this incredible recipe to see how to make it!
                   </Typography>
                 </CardContent>
               </Card>
