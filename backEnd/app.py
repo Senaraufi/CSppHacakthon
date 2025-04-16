@@ -22,20 +22,31 @@ def meal_detail(meal_id):
 def api_generate_meals():
     data = request.get_json()
     ingredients = data.get('ingredients', [])
+    dietary_tags = data.get('diet', [])
+
     if not ingredients:
         return jsonify({'meals': []})
-    # If ingredients is a list, join into comma-separated string for the client
+
+    # Handle formats
     if isinstance(ingredients, list):
         ingredients_str = ','.join(ingredients)
     else:
         ingredients_str = ingredients
-    meals = meal_client.get_meals_by_ingredients(ingredients_str)
-    # Ensure meals is a list of dicts with at least 'name' and 'ingredients' fields
+
+    if isinstance(dietary_tags, str):
+        dietary_list = [dietary_tags]
+    else:
+        dietary_list = dietary_tags
+
+    # Use dietary-aware filtering
+    meals = meal_client.get_filtered_meals(ingredients_str, dietary_list)
+
+    # Ensure valid JSON structure
     meals_json = []
     for meal in meals:
         if isinstance(meal, dict):
             meals_json.append(meal)
         else:
-            # fallback: just send meal name
             meals_json.append({'name': str(meal)})
+
     return jsonify({'meals': meals_json})
