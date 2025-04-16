@@ -112,7 +112,7 @@ function App() {
               </Stack>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Box component="img" src="/images/hero-image.jpg" sx={{ width: '100%', borderRadius: 4 }} />
+              {/* <Box component="img" src="/images/hero-image.jpg" sx={{ width: '100%', borderRadius: 4 }} /> */}
             </Grid>
           </Grid>
         </Container>
