@@ -124,7 +124,7 @@ function FoodSavedToday() {
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
       <Card sx={{ minWidth: 280, bgcolor: '#f7fff2', boxShadow: 4, borderRadius: 3, p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography variant="h2" sx={{ color: 'success.main', fontWeight: 700, mb: 1 }}>
-          {saved} kg
+          {saved} kg 🛟
         </Typography>
         <Typography variant="h6" sx={{ color: 'text.secondary', mb: 1 }}>
           of food saved today!
